@@ -12,6 +12,8 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
+//go:generate rice embed-go
+
 type server struct {
 	config    Config
 	templates *template.Template
