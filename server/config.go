@@ -6,6 +6,6 @@ import (
 
 type Config struct {
 	Bind        string
-	BaseUrl     string
+	BaseUrl     string // TODO
 	DataDirPath string
 }

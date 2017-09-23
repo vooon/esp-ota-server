@@ -19,14 +19,15 @@ func main() {
 		if flerr, ok := err.(*flags.Error); ok && flerr.Type == flags.ErrHelp {
 			os.Exit(0)
 		} else {
-			fmt.Fatal(err)
+			fmt.Fprint(os.Stderr, err)
+			os.Exit(1)
 		}
 	}
 
 	config := server.Config{
-		Bind:    opts.Bind,
-		BaseUrl: opts.BaseUrl,
-		DataDir: opts.DataDir,
+		Bind:        opts.Bind,
+		BaseUrl:     opts.BaseUrl,
+		DataDirPath: opts.DataDir,
 	}
 
 	server.Serve(config)
