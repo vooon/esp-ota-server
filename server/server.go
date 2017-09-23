@@ -45,7 +45,14 @@ func (s server) getBinaryFile(c echo.Context) error {
 	path := filepath.Join(s.config.DataDirPath, project, filename)
 	file, err := os.Open(path)
 	if err != nil && os.IsNotExist(err) {
+		lg.Warnj(log.JSON{
+			"msg":       "File not found",
+			"err":       err,
+			"file_path": path,
+		})
 		return c.String(http.StatusNotFound, "no file")
+	} else if err != nil {
+		return err
 	}
 	defer file.Close()
 
@@ -109,10 +116,13 @@ func (s server) getBinaryFile(c echo.Context) error {
 	lg.Printj(log.JSON{
 		"esp8266_mode": mode[0],
 		"send_file":    sendFile,
+		"file_path":    path,
+		"file_size":    len(b),
 	})
 
 	if sendFile {
-		return c.Blob(http.StatusOK, "application/ocetet-stream", b)
+		//return c.Blob(http.StatusOK, "application/ocetet-stream", b)
+		return c.File(path)
 	} else {
 		return c.String(http.StatusNotModified, "")
 	}

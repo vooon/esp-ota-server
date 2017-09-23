@@ -1,0 +1,18 @@
+[Unit]
+Description = ESP OTA Server
+After = network.target
+
+[Service]
+User = www-data
+Group = www-data
+WorkingDirectory = /var/www
+
+ExecStart = /usr/local/sbin/espotad -d /var/www/fd-ota
+
+KillSignal = SIGINT
+TimeoutStopSec = 10m
+
+Restart=always
+
+[Install]
+WantedBy = multi-user.target
