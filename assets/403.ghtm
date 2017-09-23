@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Move along. There's nothing to see here.</title>
+</head>
+<body>
+	<center>
+		<h1>Move along. There's nothing to see here.</h1>
+		{{if .BarbradyJpgBase64}}
+		<img src="{{.BarbradyJpgBase64}}">
+		{{else}}
+		<p>Assets error?<p>
+		<p>No matter, go away!</p>
+		{{end}}
+	</center>
+</body>
+</html>
