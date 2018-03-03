@@ -36,6 +36,14 @@ func (s server) Render(w io.Writer, name string, data interface{}, c echo.Contex
 	return s.templates.ExecuteTemplate(w, name, data)
 }
 
+func getEspHeader(hdr http.Header, key string) (ret []string, ok bool) {
+	ret, ok = hdr[http.CanonicalHeaderKey("x-esp8266-"+key)]
+	if !ok {
+		ret, ok = hdr[http.CanonicalHeaderKey("x-esp32-"+key)]
+	}
+	return
+}
+
 func (s server) getBinaryFile(c echo.Context) error {
 	lg := c.Logger()
 
@@ -72,18 +80,18 @@ func (s server) getBinaryFile(c echo.Context) error {
 	hdr := c.Request().Header
 
 	lg.Printj(log.JSON{
-		"esp8266_request_headers": hdr,
+		"esp_request_headers": hdr,
 	})
 
 	//staMac, _ := hdr["X-Esp8266-Sta-Mac"]
 	//apMac, _ := hdr["X-Esp8266-Ap-Mac"]
 	//freeSpace, _ := hdr["X-Esp8266-Free-Space"]
 	//sketchSize, _ := hdr["X-Esp8266-Sketch-Size"]
-	sketchMd5, md5ok := hdr["X-Esp8266-Sketch-Md5"]
+	sketchMd5, md5ok := getEspHeader(hdr, "sketch-md5")
 	//chipSize, _ := hdr["X-Esp8266-Chip-Size"]
 	//sdkVersion, _ := hdr["X-Esp8266-Sdk-Version"]
-	mode, ok := hdr["X-Esp8266-Mode"]
-	version, vok := hdr["X-Esp8266-Version"]
+	mode, ok := getEspHeader(hdr, "mode")
+	version, vok := getEspHeader(hdr, "version")
 
 	if !ok {
 		return c.String(http.StatusBadRequest, "bad request")
@@ -98,7 +106,7 @@ func (s server) getBinaryFile(c echo.Context) error {
 		}
 
 		c.Logger().Printj(log.JSON{
-			"esp8266_version_map": vmap,
+			"esp_version_map": vmap,
 		})
 
 		// if version has MD5
@@ -114,10 +122,10 @@ func (s server) getBinaryFile(c echo.Context) error {
 	c.Response().Header()["x-MD5"] = []string{md5sum} // do not do strings.Title()
 	c.Response().Header().Set("x-SHA512", sha512sum)  // not used by actual version
 	lg.Printj(log.JSON{
-		"esp8266_mode": mode[0],
-		"send_file":    sendFile,
-		"file_path":    path,
-		"file_size":    len(b),
+		"esp_mode":  mode[0],
+		"send_file": sendFile,
+		"file_path": path,
+		"file_size": len(b),
 	})
 
 	if sendFile {
