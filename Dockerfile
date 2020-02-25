@@ -1,4 +1,4 @@
-FROM ubuntu:xenial
+FROM ubuntu:bionic
 
 ENV EOBIND :8092
 #ENV EOBASEURL http://localhost:8092/
