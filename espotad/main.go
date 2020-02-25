@@ -8,9 +8,9 @@ import (
 )
 
 var opts struct {
-	Bind    string `short:"s" long:"bind" env:"EOBIND" default:":8092"`
-	BaseUrl string `short:"u" long:"base-url" env:"EOBASEURL" default:"http://localhost:8092"`
-	DataDir string `short:"d" long:"data-dir" env:"EODATADIR" required:"true"`
+	Bind    string `short:"s" long:"bind" env:"EOBIND" default:":8092" description:"bind address"`
+	BaseUrl string `short:"u" long:"base-url" env:"EOBASEURL" default:"http://localhost:8092" description:"base url"`
+	DataDir string `short:"d" long:"data-dir" env:"EODATADIR" required:"true" description:"path to data dir"`
 }
 
 func main() {
