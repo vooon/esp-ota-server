@@ -3,7 +3,7 @@ module github.com/vooon/esp-ota-server
 go 1.13
 
 require (
-	github.com/GeertJohan/go.rice v1.0.0
+	github.com/GeertJohan/go.rice v1.0.1
 	github.com/daaku/go.zipexe v1.0.1 // indirect
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/labstack/echo/v4 v4.1.17
