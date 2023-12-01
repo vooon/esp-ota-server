@@ -5,17 +5,17 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
 
-	"github.com/GeertJohan/go.rice"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
+
+	"github.com/vooon/esp-ota-server/assets"
 )
 
 //go:generate rice embed-go
@@ -69,7 +69,7 @@ func (s server) getBinaryFile(c echo.Context) error {
 
 	teeRd := io.TeeReader(io.TeeReader(file, md5hasher), sha512hasher)
 
-	b, err := ioutil.ReadAll(teeRd)
+	b, err := io.ReadAll(teeRd)
 	if err != nil {
 		return err
 	}
@@ -142,7 +142,11 @@ func (s server) get403(c echo.Context) error {
 	})
 }
 
-func Serve(config Config) {
+func parseTemplates() (*template.Template, error) {
+	return template.ParseFS(assets.Assets, "*.ghtm")
+}
+
+func Serve(config Config) error {
 	e := echo.New()
 
 	e.Use(middleware.Logger())
@@ -151,47 +155,27 @@ func Serve(config Config) {
 	newpath, err := filepath.Abs(config.DataDirPath)
 	if err != nil {
 		e.Logger.Fatal("can't abs data-dir")
+		return err
 	}
 	if stat, err := os.Stat(newpath); err == nil && stat.IsDir() {
 		e.Logger.Info("Data-dir: ", newpath)
 		config.DataDirPath = newpath
 	} else {
 		e.Logger.Fatal("data-dir not exist! ", newpath)
+		return err
 	}
 
-	var templates *template.Template = nil
-	assets := rice.MustFindBox("../assets")
-	assets.Walk("", func(name string, info os.FileInfo, err error) error {
-		e.Logger.Info("Processing asset ", name)
-
-		if m, _ := filepath.Match("*.ghtm", name); !m {
-			return nil
-		}
-
-		bn := filepath.Base(name)
-		s, _ := assets.String(name)
-
-		var tmpl *template.Template
-		if templates == nil {
-			templates = template.New(bn)
-		}
-
-		if bn == templates.Name() {
-			tmpl = templates
-		} else {
-			tmpl = templates.New(bn)
-		}
-
-		_, err2 := tmpl.Parse(s)
-		return err2
-	})
+	templates, err := parseTemplates()
+	if err != nil {
+		return err
+	}
 
 	s := server{
 		config:    config,
 		templates: templates,
 	}
 
-	assetHandler := http.FileServer(assets.HTTPBox())
+	assetHandler := http.FileServer(http.FS(assets.Assets))
 
 	e.Renderer = s
 	e.GET("/bin/:project/:file", s.getBinaryFile)
@@ -199,5 +183,5 @@ func Serve(config Config) {
 	e.GET("/assets/*", echo.WrapHandler(http.StripPrefix("/assets/", assetHandler)))
 	e.GET("/", s.get403)
 
-	e.Logger.Fatal(e.Start(config.Bind))
+	return e.Start(config.Bind)
 }
