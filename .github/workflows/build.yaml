@@ -21,4 +21,4 @@ jobs:
           GOOS: ${{ matrix.GOOS }}
           GOARCH: ${{ matrix.GOARCH }}
           CGO_ENABLED: 0
-        run: go build -trimpath
+        run: go build -trimpath ./...
