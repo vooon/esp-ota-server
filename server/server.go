@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 	"text/template"
 
 	"github.com/labstack/echo/v4"
@@ -17,8 +16,6 @@ import (
 
 	"github.com/vooon/esp-ota-server/assets"
 )
-
-//go:generate rice embed-go
 
 type server struct {
 	config    Config
@@ -99,10 +96,9 @@ func (s server) getBinaryFile(c echo.Context) error {
 
 	sendFile := true
 	if vok {
-		vmap := map[string]string{}
-		for _, kv := range strings.Split(version[0], " ") {
-			n := strings.SplitN(kv, ":", 2)
-			vmap[n[0]] = n[1]
+		vmap, err := parseVersionHeader(version)
+		if err != nil {
+			return err
 		}
 
 		c.Logger().Printj(log.JSON{
