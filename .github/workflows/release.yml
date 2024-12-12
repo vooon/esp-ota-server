@@ -35,7 +35,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/$GITHUB_REPOSITORY
+            ghcr.io/vooon/esp-ota-server
           tags: |
             type=schedule
             type=ref,event=branch
