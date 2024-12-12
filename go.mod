@@ -1,6 +1,6 @@
 module github.com/vooon/esp-ota-server
 
-go 1.20
+go 1.23
 
 require (
 	github.com/alecthomas/kong v1.6.0
