@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"text/template"
 
+	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -147,6 +148,9 @@ func Serve(config Config) error {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	if config.EnablePrometheus {
+		e.Use(echoprometheus.NewMiddleware("espota"))
+	}
 
 	newpath, err := filepath.Abs(config.DataDirPath)
 	if err != nil {
@@ -175,8 +179,11 @@ func Serve(config Config) error {
 
 	e.Renderer = s
 	e.GET("/bin/:project/:file", s.getBinaryFile)
-	//e.POST("/bin/:project/:file", postBinaryFile)
+	// e.POST("/bin/:project/:file", postBinaryFile)
 	e.GET("/assets/*", echo.WrapHandler(http.StripPrefix("/assets/", assetHandler)))
+	if config.EnablePrometheus {
+		e.GET("/metrics", echoprometheus.NewHandler())
+	}
 	e.GET("/", s.get403)
 
 	return e.Start(config.Bind)

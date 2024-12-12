@@ -1,7 +1,8 @@
 package server
 
 type Config struct {
-	Bind        string
-	BaseUrl     string
-	DataDirPath string
+	Bind             string
+	BaseUrl          string
+	DataDirPath      string
+	EnablePrometheus bool
 }

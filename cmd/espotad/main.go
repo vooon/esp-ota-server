@@ -7,9 +7,10 @@ import (
 )
 
 var opts struct {
-	Bind    string `short:"s" name:"bind" env:"EOBIND" default:":8092" help:"bind address"`
-	BaseUrl string `short:"u" name:"base-url" env:"EOBASEURL" default:"http://localhost:8092" help:"base url"`
-	DataDir string `short:"d" name:"data-dir" env:"EODATADIR" required:"true" help:"path to data dir"`
+	Bind       string `short:"s" name:"bind" env:"EOBIND" default:":8092" help:"bind address"`
+	BaseUrl    string `short:"u" name:"base-url" env:"EOBASEURL" default:"http://localhost:8092" help:"base url"`
+	DataDir    string `short:"d" name:"data-dir" env:"EODATADIR" required:"true" help:"path to data dir"`
+	Prometheus bool   `short:"m" name:"prometheus" env:"EOPROMETHEUS" negatable:"" help:"Enable/disable prometheus /metrics endpoint"`
 }
 
 func main() {
@@ -23,9 +24,10 @@ func main() {
 	)
 
 	config := server.Config{
-		Bind:        opts.Bind,
-		BaseUrl:     opts.BaseUrl,
-		DataDirPath: opts.DataDir,
+		Bind:             opts.Bind,
+		BaseUrl:          opts.BaseUrl,
+		DataDirPath:      opts.DataDir,
+		EnablePrometheus: opts.Prometheus,
 	}
 
 	err := server.Serve(config)
