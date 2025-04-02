@@ -60,7 +60,7 @@ func (s server) getBinaryFile(c echo.Context) error {
 	} else if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer file.Close() // nolint:errcheck
 
 	md5hasher := md5.New()
 	sha512hasher := sha512.New()
