@@ -5,7 +5,7 @@ go 1.24.3
 require (
 	github.com/alecthomas/kong v1.11.0
 	github.com/labstack/echo-contrib v0.17.4
-	github.com/labstack/echo/v4 v4.13.3
+	github.com/labstack/echo/v4 v4.13.4
 	github.com/labstack/gommon v0.4.2
 	github.com/stretchr/testify v1.10.0
 )
