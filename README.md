@@ -14,7 +14,6 @@ OTA URL: `http://<server-bind-host>/bin/<project>/<file.bin>`
 
 TODO:
 - Upload firmware (but for now rsync is enough)
-- Automatic TLS via Lets Encrypt, with keeping same cert fingerprint (limitation of esp updater)
 - Repository like, for multiple versions (if i really need that)
 - Working md5-version check for SPIFFS images
 
