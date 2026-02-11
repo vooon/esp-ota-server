@@ -84,12 +84,12 @@ func TestGetBinaryFile(t *testing.T) {
 	}
 
 	testCases := []struct {
-		name          string
-		headers       http.Header
-		expectedCode  int
-		expectedBody  string
-		expectMD5     bool
-		expectSHA512  bool
+		name         string
+		headers      http.Header
+		expectedCode int
+		expectedBody string
+		expectMD5    bool
+		expectSHA512 bool
 	}{
 		{
 			name:         "missing-mode-header",
@@ -141,7 +141,7 @@ func TestGetBinaryFile(t *testing.T) {
 			assert.Equal(t, tc.expectedCode, rec.Code)
 			assert.Equal(t, tc.expectedBody, rec.Body.String())
 			if tc.expectMD5 {
-				assert.Equal(t, []string{md5sum}, rec.Header()["x-MD5"])
+				assert.Equal(t, []string{md5sum}, rec.Header()["x-MD5"]) //nolint:staticcheck // exact header casing is intentional
 			}
 			if tc.expectSHA512 {
 				assert.NotEmpty(t, rec.Header().Get("x-SHA512"))
