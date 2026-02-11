@@ -5,7 +5,7 @@ go 1.25.4
 require (
 	github.com/alecthomas/kong v1.14.0
 	github.com/labstack/echo-contrib v0.50.0
-	github.com/labstack/echo/v4 v4.15.0
+	github.com/labstack/echo/v5 v5.0.3
 	github.com/labstack/gommon v0.4.2
 	github.com/stretchr/testify v1.11.1
 )
@@ -15,7 +15,6 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
-	github.com/labstack/echo/v5 v5.0.0-20260118161441-9500f2745481 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
@@ -27,10 +26,8 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
-	golang.org/x/crypto v0.47.0 // indirect
-	golang.org/x/net v0.49.0 // indirect
-	golang.org/x/sys v0.40.0 // indirect
-	golang.org/x/text v0.33.0 // indirect
+	golang.org/x/net v0.50.0 // indirect
+	golang.org/x/sys v0.41.0 // indirect
 	golang.org/x/time v0.14.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
