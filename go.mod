@@ -7,6 +7,7 @@ require (
 	github.com/labstack/echo-contrib v0.50.0
 	github.com/labstack/echo/v5 v5.0.3
 	github.com/stretchr/testify v1.11.1
+	github.com/thanhpk/randstr v1.0.6
 )
 
 require (
