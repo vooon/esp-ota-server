@@ -149,3 +149,19 @@ func TestGetBinaryFile(t *testing.T) {
 		})
 	}
 }
+
+func TestHealthz(t *testing.T) {
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/healthz", nil)
+	rec := httptest.NewRecorder()
+
+	c := e.NewContext(req, rec)
+	c.SetPath("/healthz")
+
+	s := server{}
+	err := s.healthz(c)
+	require.NoError(t, err)
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+	assert.Equal(t, "ok", rec.Body.String())
+}

@@ -120,6 +120,10 @@ func (s server) get403(c *echo.Context) error {
 	})
 }
 
+func (s server) healthz(c *echo.Context) error {
+	return c.String(http.StatusOK, "ok")
+}
+
 func parseTemplates() (*template.Template, error) {
 	return template.ParseFS(assets.Assets, "*.ghtm")
 }
@@ -162,6 +166,7 @@ func Serve(config Config) error {
 	e.Renderer = s
 	e.GET("/bin/:project/:file", s.getBinaryFile)
 	// e.POST("/bin/:project/:file", postBinaryFile)
+	e.GET("/healthz", s.healthz)
 	e.GET("/assets/*", echo.WrapHandler(http.StripPrefix("/assets/", assetHandler)))
 	if config.EnablePrometheus {
 		e.GET("/metrics", echoprometheus.NewHandler())
