@@ -4,6 +4,12 @@ on:
   push:
   pull_request:
 
+permissions: read-all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Lint
@@ -15,5 +21,8 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
+          cache: true
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
+        with:
+          args: --timeout=5m

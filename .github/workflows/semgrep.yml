@@ -8,6 +8,12 @@ on:
   schedule:
     - cron: '20 17 * * *' # Sets Semgrep to scan every day at 17:20 UTC.
 
+permissions: read-all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   semgrep:
     name: semgrep/ci

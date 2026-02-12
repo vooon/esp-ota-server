@@ -9,6 +9,10 @@ permissions:
   contents: write
   packages: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
@@ -21,6 +25,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
+          cache: true
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:
@@ -33,6 +38,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Docker meta
         id: meta
@@ -64,3 +71,5 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+          provenance: true
+          sbom: true
