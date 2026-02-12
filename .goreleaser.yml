@@ -11,7 +11,6 @@ builds:
       - -X github.com/prometheus/common/version.Version={{ .Version }}
       - -X github.com/prometheus/common/version.Revision={{ .Commit }}
       - -X github.com/prometheus/common/version.Branch={{ .Branch }}
-      - -X github.com/prometheus/common/version.BuildUser={{ .Env.USER }}
       - -X github.com/prometheus/common/version.BuildDate={{ .Date }}
     targets:
       - linux_amd64
