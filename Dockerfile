@@ -20,7 +20,7 @@ FROM alpine
 
 LABEL org.opencontainers.image.description="ESP OTA Server"
 
-COPY --from=builder /build/espotad_*/espotad /espotad
+COPY --from=builder /build/dist/*/bin/esp-ota-server /espotad
 
 ENV EOBIND=:8092
 # ENV EOBASEURL=http://localhost:8092/
