@@ -2,11 +2,13 @@ package main
 
 import (
 	"github.com/alecthomas/kong"
+	"github.com/prometheus/common/version"
 
 	"github.com/vooon/esp-ota-server/server"
 )
 
 var opts struct {
+	Version    kong.VersionFlag `name:"version" help:"Show version and exit."`
 	Bind       string `short:"s" name:"bind" env:"EOBIND" default:":8092" help:"bind address"`
 	BaseUrl    string `short:"u" name:"base-url" env:"EOBASEURL" default:"http://localhost:8092" help:"base url"`
 	DataDir    string `short:"d" name:"data-dir" env:"EODATADIR" required:"true" help:"path to data dir"`
@@ -21,6 +23,9 @@ func main() {
 			Compact: false,
 		}),
 		kong.DefaultEnvars("ESPOTA"),
+		kong.Vars{
+			"version": version.Print("espotad"),
+		},
 	)
 
 	config := server.Config{
