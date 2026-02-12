@@ -1,29 +1,20 @@
+version: 2
+
 builds:
-  -  # First Build
+  - id: espotad
+    main: ./cmd/espotad
     env:
       - CGO_ENABLED=0
-    main: ./cmd/espotad
-    ldflags: >-
-      -s -w
-
-    # Set the binary output location to bin/ so archive will comply with Sensu Go Asset structure
     binary: bin/{{ .ProjectName }}
-    goos:
-      - linux
-    goarch:
-      - amd64
-      - 386
-      - arm
-      - arm64
-    goarm:
-      - 5
-      - 6
-      - 7
+    ldflags:
+      - -s -w
+      - -X github.com/prometheus/common/version.Version={{ .Version }}
+      - -X github.com/prometheus/common/version.Revision={{ .Commit }}
+      - -X github.com/prometheus/common/version.Branch={{ .Branch }}
+      - -X github.com/prometheus/common/version.BuildUser={{ .Env.USER }}
+      - -X github.com/prometheus/common/version.BuildDate={{ .Date }}
     targets:
-      - linux_386
       - linux_amd64
-      - linux_arm_5
-      - linux_arm_6
       - linux_arm_7
       - linux_arm64
 
@@ -33,7 +24,8 @@ checksum:
 
 archives:
   - id: tar
-    format: tar.gz
+    formats:
+      - tar.gz
     files:
       - LICENSE
       - README.md
