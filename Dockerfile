@@ -1,4 +1,4 @@
-FROM ghcr.io/goreleaser/goreleaser-cross:v1.25 AS builder
+FROM ghcr.io/goreleaser/goreleaser-cross:v1.26 AS builder
 
 WORKDIR /build
 
