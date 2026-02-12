@@ -1,0 +1,139 @@
+openapi: 3.1.0
+info:
+  title: ESP OTA Server
+  version: "0.12.0"
+  description: >
+    Simple OTA server for ESP8266/ESP32 devices. This spec covers the public
+    HTTP endpoints used by devices and operators.
+servers:
+  - url: http://localhost:8092
+
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      description: Returns 200 OK when the server is up.
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                ok:
+                  value: ok
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      description: >
+        Exposes Prometheus metrics when the server is started with Prometheus
+        enabled.
+      responses:
+        "200":
+          description: Prometheus metrics text format
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /bin/{project}/{file}:
+    get:
+      summary: Fetch firmware binary
+      description: >
+        Returns the firmware binary if the client needs an update.
+      parameters:
+        - name: project
+          in: path
+          required: true
+          description: Project identifier.
+          schema:
+            type: string
+        - name: file
+          in: path
+          required: true
+          description: Firmware filename.
+          schema:
+            type: string
+        - name: X-Esp8266-Mode
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Required for ESP8266 devices. Example: `sketch`.
+        - name: X-Esp32-Mode
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Required for ESP32 devices. Example: `sketch`.
+        - name: X-Esp8266-Sketch-Md5
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Current firmware MD5 for ESP8266.
+        - name: X-Esp32-Sketch-Md5
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Current firmware MD5 for ESP32.
+        - name: X-Esp8266-Version
+          in: header
+          required: false
+          schema:
+            type: string
+          description: >
+            Version info for ESP8266. Supports `md5:<hash>` among other tokens.
+        - name: X-Esp32-Version
+          in: header
+          required: false
+          schema:
+            type: string
+          description: >
+            Version info for ESP32. Supports `md5:<hash>` among other tokens.
+      responses:
+        "200":
+          description: Firmware binary
+          headers:
+            x-MD5:
+              description: MD5 of the firmware.
+              schema:
+                type: string
+            x-SHA512:
+              description: SHA512 of the firmware.
+              schema:
+                type: string
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "304":
+          description: Client already has the latest firmware.
+        "400":
+          description: Missing or invalid headers.
+          content:
+            text/plain:
+              schema:
+                type: string
+        "404":
+          description: Firmware not found.
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /:
+    get:
+      summary: Root
+      description: Returns a 403 page.
+      responses:
+        "403":
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
