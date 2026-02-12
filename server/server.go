@@ -110,7 +110,7 @@ func (s server) getBinaryFile(c *echo.Context) error {
 		//return c.Blob(http.StatusOK, "application/ocetet-stream", b)
 		return c.File(path)
 	} else {
-		return c.String(http.StatusNotModified, "")
+		return c.NoContent(http.StatusNotModified)
 	}
 }
 
