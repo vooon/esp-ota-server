@@ -16,7 +16,7 @@ RUN if [ ! -e ~/.gitconfig ]; then \
 
 RUN goreleaser build --snapshot --single-target
 
-FROM alpine
+FROM alpine:latest
 
 LABEL org.opencontainers.image.description="ESP OTA Server"
 
@@ -28,5 +28,8 @@ ENV EODATADIR=/data
 
 VOLUME /data
 EXPOSE 8092
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:8092/healthz >/dev/null || exit 1
 
 CMD ["/espotad"]
