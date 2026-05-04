@@ -25,8 +25,8 @@ github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0
 github.com/kylelemons/godebug v1.1.0/go.mod h1:9/0rRGxNHcop5bhtWyNeEfOS8JIWk580+fNqagV/RAw=
 github.com/labstack/echo-contrib/v5 v5.0.1 h1:Z23m8p1F9Doax+pa8ek8ll5d6wvzCbvrAn25ZWmSgrE=
 github.com/labstack/echo-contrib/v5 v5.0.1/go.mod h1:ajrqEwSloW0vQSTfJ4j9u4tHoS+dg4umCDPxuTvChZs=
-github.com/labstack/echo/v5 v5.1.0 h1:MvIRydoN+p9cx/zq8Lff6YXqUW2ZaEsOMISzEGSMrBI=
-github.com/labstack/echo/v5 v5.1.0/go.mod h1:SyvlSdObGjRXeQfCCXW/sybkZdOOQZBmpKF0bvALaeo=
+github.com/labstack/echo/v5 v5.1.1 h1:4QkvKoS8ps5ch49t8b72QS9Z581ytgxhTzxuB/CBA2I=
+github.com/labstack/echo/v5 v5.1.1/go.mod h1:SyvlSdObGjRXeQfCCXW/sybkZdOOQZBmpKF0bvALaeo=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq1c1nUAm88MOHcQC9l5mIlSMApZMrHA=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
