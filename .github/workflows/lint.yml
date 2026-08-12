@@ -4,19 +4,23 @@ on:
   push:
   pull_request:
 
-permissions: read-all
+permissions:
+  contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: lint-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  test:
+  lint:
     name: Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: Set up Go
         uses: actions/setup-go@v7
         with:
@@ -24,5 +28,3 @@ jobs:
           cache: true
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
-        with:
-          args: --timeout=5m

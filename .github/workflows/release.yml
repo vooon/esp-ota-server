@@ -1,4 +1,4 @@
-name: goreleaser
+name: Release
 
 on:
   push:
@@ -10,17 +10,19 @@ permissions:
   packages: write
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+
       - name: Set up Go
         uses: actions/setup-go@v7
         with:
@@ -60,8 +62,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
       - name: Build and push to registry
