@@ -85,6 +85,8 @@ func TestGetBinaryFile(t *testing.T) {
 
 	testCases := []struct {
 		name         string
+		project      string
+		file         string
 		headers      http.Header
 		expectedCode int
 		expectedBody string
@@ -93,12 +95,36 @@ func TestGetBinaryFile(t *testing.T) {
 	}{
 		{
 			name:         "missing-mode-header",
+			project:      project,
+			file:         filename,
 			headers:      http.Header{},
 			expectedCode: http.StatusBadRequest,
 			expectedBody: "bad request",
 		},
 		{
-			name: "not-modified-when-md5-matches",
+			name:    "path-traversal-project",
+			project: "..",
+			file:    filename,
+			headers: http.Header{
+				"X-Esp8266-Mode": []string{"sketch"},
+			},
+			expectedCode: http.StatusBadRequest,
+			expectedBody: "bad request",
+		},
+		{
+			name:    "path-traversal-file",
+			project: project,
+			file:    "../../etc/passwd",
+			headers: http.Header{
+				"X-Esp8266-Mode": []string{"sketch"},
+			},
+			expectedCode: http.StatusBadRequest,
+			expectedBody: "bad request",
+		},
+		{
+			name:    "not-modified-when-md5-matches",
+			project: project,
+			file:    filename,
 			headers: http.Header{
 				"X-Esp8266-Mode":       []string{"sketch"},
 				"X-Esp8266-Sketch-Md5": []string{md5sum},
@@ -109,7 +135,9 @@ func TestGetBinaryFile(t *testing.T) {
 			expectSHA512: true,
 		},
 		{
-			name: "send-file-when-md5-differs",
+			name:    "send-file-when-md5-differs",
+			project: project,
+			file:    filename,
 			headers: http.Header{
 				"X-Esp8266-Mode":       []string{"sketch"},
 				"X-Esp8266-Sketch-Md5": []string{"deadbeef"},
@@ -124,15 +152,15 @@ func TestGetBinaryFile(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			e := echo.New()
-			req := httptest.NewRequest(http.MethodGet, "/bin/"+project+"/"+filename, nil)
+			req := httptest.NewRequest(http.MethodGet, "/bin/"+tc.project+"/"+tc.file, nil)
 			req.Header = tc.headers.Clone()
 			rec := httptest.NewRecorder()
 
 			c := e.NewContext(req, rec)
 			c.SetPath("/bin/:project/:file")
 			c.SetPathValues(echo.PathValues{
-				{Name: "project", Value: project},
-				{Name: "file", Value: filename},
+				{Name: "project", Value: tc.project},
+				{Name: "file", Value: tc.file},
 			})
 
 			err := s.getBinaryFile(c)

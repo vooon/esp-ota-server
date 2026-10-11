@@ -42,7 +42,11 @@ func (s server) getBinaryFile(c *echo.Context) error {
 	project := c.Param("project")
 	filename := c.Param("file")
 
-	path := filepath.Join(s.config.DataDirPath, project, filename)
+	path, err := safeFilePath(s.config.DataDirPath, project, filename)
+	if err != nil {
+		lg.Warn("Invalid path", "err", err, "project", project, "file", filename)
+		return c.String(http.StatusBadRequest, "bad request")
+	}
 	file, err := os.Open(path)
 	if err != nil && os.IsNotExist(err) {
 		lg.Warn("File not found", "err", err, "file_path", path)
