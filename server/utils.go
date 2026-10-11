@@ -2,6 +2,8 @@ package server
 
 import (
 	"fmt"
+	"io/fs"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -9,15 +11,11 @@ import (
 const unknownVersionKey = "ver"
 
 func safeFilePath(base string, parts ...string) (string, error) {
-	p := filepath.Join(append([]string{base}, parts...)...)
-	rel, err := filepath.Rel(base, p)
-	if err != nil {
-		return "", fmt.Errorf("invalid path: %w", err)
-	}
-	if rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+	rel := path.Join(parts...)
+	if !fs.ValidPath(rel) {
 		return "", fmt.Errorf("path escapes data directory")
 	}
-	return p, nil
+	return filepath.Join(base, rel), nil
 }
 
 func parseVersionHeader(versionHdr []string) (map[string]string, error) {
