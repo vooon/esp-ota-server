@@ -4,7 +4,52 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
+
+func TestSafeFilePath(t *testing.T) {
+	base := "/data"
+
+	testCases := []struct {
+		name        string
+		parts       []string
+		expected    string
+		expectError bool
+	}{
+		{
+			name:     "valid-path",
+			parts:    []string{"project-a", "firmware.bin"},
+			expected: "/data/project-a/firmware.bin",
+		},
+		{
+			name:     "nested-valid",
+			parts:    []string{"project-a", "sub", "fw.bin"},
+			expected: "/data/project-a/sub/fw.bin",
+		},
+		{
+			name:        "dotdot-in-project",
+			parts:       []string{"..", "passwd"},
+			expectError: true,
+		},
+		{
+			name:        "dotdot-in-filename",
+			parts:       []string{"project-a", "../../etc/passwd"},
+			expectError: true,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			p, err := safeFilePath(base, tc.parts...)
+			if tc.expectError {
+				assert.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+			assert.Equal(t, tc.expected, p)
+		})
+	}
+}
 
 func TestParseVersionHeader(t *testing.T) {
 
