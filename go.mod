@@ -3,7 +3,7 @@ module github.com/vooon/esp-ota-server
 go 1.27.0
 
 require (
-	github.com/alecthomas/kong v1.16.1
+	github.com/alecthomas/kong v1.17.0
 	github.com/labstack/echo-contrib/v5 v5.0.1
 	github.com/labstack/echo/v5 v5.4.2
 	github.com/prometheus/common v0.73.0
