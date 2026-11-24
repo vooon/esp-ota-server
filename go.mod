@@ -5,7 +5,7 @@ go 1.27.0
 require (
 	github.com/alecthomas/kong v1.17.0
 	github.com/labstack/echo-contrib/v5 v5.0.1
-	github.com/labstack/echo/v5 v5.4.6
+	github.com/labstack/echo/v5 v5.4.7
 	github.com/prometheus/common v0.74.0
 	github.com/stretchr/testify v1.12.1
 	github.com/thanhpk/randstr v1.0.7
